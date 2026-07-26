@@ -1,5 +1,6 @@
 use std::println;
-
+use std::env;
+use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use zstd::{Decoder, stream::write::Encoder};
 
@@ -41,6 +42,9 @@ async fn login() {
             version = "0.1.0"
         );
 
+    dotenv().ok();
+    let password = env::var("ANKI_PASSWORD").unwrap();
+
     let login_header = LoginAnkiSyncHeader {
         v: 11,
         c: client_version,
@@ -49,7 +53,7 @@ async fn login() {
     };
     let body = LoginBody {
         u: String::from("filip@razek.org"),
-        p: String::from("PASSWORD"),
+        p: password,
     };
 
     let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
