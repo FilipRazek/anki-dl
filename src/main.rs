@@ -1,10 +1,11 @@
-use std::io::Error;
-use std::io::Read;
 use std::println;
 use std::env;
+use decompress::decompress_result;
 use dotenv::dotenv;
-use serde::{Deserialize, Serialize};
-use zstd::{Decoder, stream::write::Encoder};
+use serde::Serialize;
+use zstd::stream::write::Encoder;
+
+mod decompress;
 
 fn main() {
     trpl::block_on(login());
@@ -22,11 +23,6 @@ struct LoginBody {
     u: String,
     p: String
 }
-
-#[derive(Debug, Deserialize)]
-struct LoginResult {
-    key: String,
-} 
 
 async fn login() {
     /*
@@ -53,11 +49,6 @@ async fn login() {
     let bytes = res.bytes().await.unwrap();
     let data = decompress_result(&bytes[..]).unwrap();
     println!("{}", data.key);
-}
-
-fn decompress_result<R: Read>(bytes: R) -> Result<LoginResult, Error> {
-    let decoder = Decoder::new(bytes)?;
-    Ok(serde_json::from_reader(decoder)?)
 }
 
 fn build_anki_sync_header() -> String {
