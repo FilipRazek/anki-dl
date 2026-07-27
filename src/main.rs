@@ -1,3 +1,4 @@
+use std::io::Read;
 use std::println;
 use std::env;
 use dotenv::dotenv;
@@ -49,9 +50,13 @@ async fn login() {
         .unwrap();
 
     let bytes = res.bytes().await.unwrap();
-    let decoder = Decoder::new(&bytes[..]).unwrap();
-    let data: LoginResult = serde_json::from_reader(decoder).unwrap();
+    let data = decompress_result(&bytes[..]);
     println!("{}", data.key);
+}
+
+fn decompress_result<R: Read>(bytes: R) -> LoginResult {
+    let decoder = Decoder::new(bytes).unwrap();
+    serde_json::from_reader(decoder).unwrap()
 }
 
 fn build_anki_sync_header() -> String {
