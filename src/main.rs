@@ -74,5 +74,5 @@ async fn login() {
     let bytes = res.bytes().await.unwrap();
     let decoder = Decoder::new(&bytes[..]).unwrap();
     let data: LoginResult = serde_json::from_reader(decoder).unwrap();
-    println!("{:?}", data);
+    println!("{}", data.key);
 }
