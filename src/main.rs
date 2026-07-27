@@ -25,13 +25,14 @@ async fn login() {
 
     let body = build_request_body(password);
 
-    let res = send_login_request(body, build_anki_sync_header()).await.unwrap();
+    let res = send_login_request(body).await.unwrap();
     let bytes = res.bytes().await.unwrap();
     let data = decompress_result(&bytes[..]).unwrap();
     println!("{}", data.key);
 }
 
-fn send_login_request(body: Vec<u8>, anki_sync_header: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
+fn send_login_request(body: Vec<u8>) -> impl Future<Output = Result<Response, reqwest::Error>> {
+    let anki_sync_header = build_anki_sync_header();
     let client = reqwest::Client::new();
     client.post("https://sync.ankiweb.net/sync/hostKey")
         .header("anki-sync", anki_sync_header)
