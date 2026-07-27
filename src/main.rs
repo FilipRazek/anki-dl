@@ -19,10 +19,13 @@ async fn login() {
         <body = zstd( {"u":"<user>","p":"<pass>"} )>
 
      */
-    dotenv().ok();
-    let password = env::var("ANKI_PASSWORD").unwrap();
-    let res = send_login_request(password).await.unwrap();
+    let res = send_login_request(load_password()).await.unwrap();
     let bytes = res.bytes().await.unwrap();
     let data = decompress_result(&bytes[..]).unwrap();
     println!("{}", data.key);
+}
+
+fn load_password() -> String {
+    dotenv().ok();
+    env::var("ANKI_PASSWORD").unwrap()
 }
