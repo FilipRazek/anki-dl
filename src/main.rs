@@ -51,14 +51,14 @@ async fn login() {
         s: String::from("test_session")
     };
 
-    let result = get_body(password);
+    let body = build_request_body(password);
 
     let client = reqwest::Client::new();
 
     let res = client.post("https://sync.ankiweb.net/sync/hostKey")
         .header("anki-sync", serde_json::to_string(&login_header).unwrap())
         .header("Content-Type", "application/octet-stream")
-        .body(result)
+        .body(body)
         .send()
         .await
         .unwrap();
@@ -69,7 +69,7 @@ async fn login() {
     println!("{}", data.key);
 }
 
-fn get_body(password: String) -> Vec<u8> {
+fn build_request_body(password: String) -> Vec<u8> {
     let body = LoginBody {
         u: String::from("filip@razek.org"),
         p: password,
@@ -85,8 +85,8 @@ mod tests {
 
     #[test]
     fn test_get_body_compression() {
-        assert_eq!(get_body(String::from("password")), [40, 181, 47, 253, 0, 88, 49, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105, 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34, 112, 97, 115, 115, 119, 111, 114, 100, 34, 125]);
-        assert_eq!(get_body(String::from("c0Mpl1c4t3D_Pa$$w0Rd")), [40, 181, 47, 253, 0, 88, 145, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105, 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34, 99, 48, 77, 112, 108, 49, 99, 52, 116, 51, 68, 95, 80, 97, 36, 36, 119, 48, 82, 100, 34, 125]);
-        assert_eq!(get_body(String::from("letmein123")), [40, 181, 47, 253, 0, 88, 65, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105, 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34, 108, 101, 116, 109, 101, 105, 110, 49, 50, 51, 34, 125]);
+        assert_eq!(build_request_body(String::from("password")), [40, 181, 47, 253, 0, 88, 49, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105, 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34, 112, 97, 115, 115, 119, 111, 114, 100, 34, 125]);
+        assert_eq!(build_request_body(String::from("c0Mpl1c4t3D_Pa$$w0Rd")), [40, 181, 47, 253, 0, 88, 145, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105, 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34, 99, 48, 77, 112, 108, 49, 99, 52, 116, 51, 68, 95, 80, 97, 36, 36, 119, 48, 82, 100, 34, 125]);
+        assert_eq!(build_request_body(String::from("letmein123")), [40, 181, 47, 253, 0, 88, 65, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105, 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34, 108, 101, 116, 109, 101, 105, 110, 49, 50, 51, 34, 125]);
     }
 }
