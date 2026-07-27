@@ -51,15 +51,8 @@ async fn login() {
         k: String::from(""),
         s: String::from("test_session")
     };
-    let body = LoginBody {
-        u: String::from("filip@razek.org"),
-        p: password,
-    };
 
-    let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
-    serde_json::to_writer(&mut encoder, &body).unwrap();
-    let result = encoder.finish().unwrap();
-
+    let result = get_body(password);
 
     let client = reqwest::Client::new();
 
@@ -75,4 +68,14 @@ async fn login() {
     let decoder = Decoder::new(&bytes[..]).unwrap();
     let data: LoginResult = serde_json::from_reader(decoder).unwrap();
     println!("{}", data.key);
+}
+
+fn get_body(password: String) -> Vec<u8> {
+    let body = LoginBody {
+        u: String::from("filip@razek.org"),
+        p: password,
+    };
+    let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
+    serde_json::to_writer(&mut encoder, &body).unwrap();
+    encoder.finish().unwrap()
 }
