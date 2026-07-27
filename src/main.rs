@@ -22,16 +22,14 @@ async fn login() {
      */
     dotenv().ok();
     let password = env::var("ANKI_PASSWORD").unwrap();
-
-    let body = build_request_body(password);
-
-    let res = send_login_request(body).await.unwrap();
+    let res = send_login_request(password).await.unwrap();
     let bytes = res.bytes().await.unwrap();
     let data = decompress_result(&bytes[..]).unwrap();
     println!("{}", data.key);
 }
 
-fn send_login_request(body: Vec<u8>) -> impl Future<Output = Result<Response, reqwest::Error>> {
+fn send_login_request(password: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
+    let body = build_request_body(password);
     let anki_sync_header = build_anki_sync_header();
     let client = reqwest::Client::new();
     client.post("https://sync.ankiweb.net/sync/hostKey")
