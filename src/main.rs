@@ -3,6 +3,7 @@ use std::env;
 use decompress::decompress_result;
 use login_request_body::{build_anki_sync_header, build_request_body};
 use dotenv::dotenv;
+use reqwest::Response;
 
 mod decompress;
 mod login_request_body;
@@ -23,17 +24,18 @@ async fn login() {
     let password = env::var("ANKI_PASSWORD").unwrap();
 
     let body = build_request_body(password);
-    let client = reqwest::Client::new();
 
-    let res = client.post("https://sync.ankiweb.net/sync/hostKey")
-        .header("anki-sync", build_anki_sync_header())
-        .header("Content-Type", "application/octet-stream")
-        .body(body)
-        .send()
-        .await
-        .unwrap();
-
+    let res = send_login_request(body, build_anki_sync_header()).await.unwrap();
     let bytes = res.bytes().await.unwrap();
     let data = decompress_result(&bytes[..]).unwrap();
     println!("{}", data.key);
+}
+
+fn send_login_request(body: Vec<u8>, anki_sync_header: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
+    let client = reqwest::Client::new();
+    client.post("https://sync.ankiweb.net/sync/hostKey")
+        .header("anki-sync", anki_sync_header)
+        .header("Content-Type", "application/octet-stream")
+        .body(body)
+        .send()
 }
