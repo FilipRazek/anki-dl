@@ -27,7 +27,6 @@ struct LoginResult {
 } 
 
 async fn login() {
-
     /*
     POST https://sync.ankiweb.net/sync/hostKey
         Content-Type: application/octet-stream
@@ -35,28 +34,14 @@ async fn login() {
         <body = zstd( {"u":"<user>","p":"<pass>"} )>
 
      */
-    let client_version = format!(
-            "{app},{version}",
-            app = "anki-dl",
-            version = "0.1.0"
-        );
-
     dotenv().ok();
     let password = env::var("ANKI_PASSWORD").unwrap();
 
-    let login_header = LoginAnkiSyncHeader {
-        v: 11,
-        c: client_version,
-        k: String::from(""),
-        s: String::from("test_session")
-    };
-
     let body = build_request_body(password);
-
     let client = reqwest::Client::new();
 
     let res = client.post("https://sync.ankiweb.net/sync/hostKey")
-        .header("anki-sync", serde_json::to_string(&login_header).unwrap())
+        .header("anki-sync", build_anki_sync_header())
         .header("Content-Type", "application/octet-stream")
         .body(body)
         .send()
@@ -67,6 +52,22 @@ async fn login() {
     let decoder = Decoder::new(&bytes[..]).unwrap();
     let data: LoginResult = serde_json::from_reader(decoder).unwrap();
     println!("{}", data.key);
+}
+
+fn build_anki_sync_header() -> String {
+    let client_version = format!(
+            "{app},{version}",
+            app = "anki-dl",
+            version = "0.1.0"
+        );
+
+    let login_header = LoginAnkiSyncHeader {
+        v: 11,
+        c: client_version,
+        k: String::from(""),
+        s: String::from("test_session")
+    };
+    serde_json::to_string(&login_header).unwrap()
 }
 
 fn build_request_body(password: String) -> Vec<u8> {
