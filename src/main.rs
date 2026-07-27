@@ -1,3 +1,4 @@
+use std::io::Error;
 use std::io::Read;
 use std::println;
 use std::env;
@@ -50,13 +51,13 @@ async fn login() {
         .unwrap();
 
     let bytes = res.bytes().await.unwrap();
-    let data = decompress_result(&bytes[..]);
+    let data = decompress_result(&bytes[..]).unwrap();
     println!("{}", data.key);
 }
 
-fn decompress_result<R: Read>(bytes: R) -> LoginResult {
-    let decoder = Decoder::new(bytes).unwrap();
-    serde_json::from_reader(decoder).unwrap()
+fn decompress_result<R: Read>(bytes: R) -> Result<LoginResult, Error> {
+    let decoder = Decoder::new(bytes)?;
+    Ok(serde_json::from_reader(decoder)?)
 }
 
 fn build_anki_sync_header() -> String {
