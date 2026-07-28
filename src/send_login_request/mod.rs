@@ -1,18 +1,17 @@
 
 use std::io::Error;
 use reqwest::Response;
-use decompress::decompress_result;
+pub use request_result::LoginResult;
 
-use crate::send_login_request::decompress::LoginResult;
-
-mod decompress;
+mod request_result;
 mod request_body;
 mod request_headers;
+
 
 pub async fn send_login_request(password: String) -> Result<LoginResult, Error> {
     let result = send_http_request(password).await.unwrap().bytes();
     let bytes = result.await.unwrap();
-    decompress_result(&bytes[..])
+    request_result::decompress_result(&bytes[..])
 }
 
 fn send_http_request(password: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
