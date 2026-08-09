@@ -16,5 +16,5 @@ async fn login() {
 
 fn load_password() -> String {
     dotenv().ok();
-    env::var("ANKI_PASSWORD").unwrap()
+    env::var("ANKI_PASSWORD").expect("Anki password not found in .env")
 }
