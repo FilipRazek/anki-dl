@@ -1,7 +1,7 @@
-use std::io::Read;
-use serde::Deserialize;
-use zstd::Decoder;
 use anyhow::Result;
+use serde::Deserialize;
+use std::io::Read;
+use zstd::Decoder;
 
 #[derive(Debug, Deserialize)]
 pub struct LoginResult {

@@ -1,7 +1,7 @@
-use std::println;
-use std::env;
-use send_login_request::send_login_request;
 use dotenvy::dotenv;
+use send_login_request::send_login_request;
+use std::env;
+use std::println;
 
 mod send_login_request;
 
@@ -11,7 +11,9 @@ async fn main() {
 }
 
 async fn login() {
-    let data = send_login_request(load_username(), load_password()).await.expect("Error login in to AnkiWeb");
+    let data = send_login_request(load_username(), load_password())
+        .await
+        .expect("Error login in to AnkiWeb");
     println!("{}", data.key);
 }
 
