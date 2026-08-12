@@ -20,7 +20,7 @@ async fn send_http_request(user: String, password: String) -> Result<Response> {
         user: user,
         password: password
     })?;
-    let anki_sync_header = request_headers::build_anki_sync();
+    let anki_sync_header = request_headers::build_anki_sync()?;
     let client = reqwest::Client::new();
     Ok(client.post("https://sync.ankiweb.net/sync/hostKey")
         .header("anki-sync", anki_sync_header)

@@ -1,4 +1,5 @@
 use serde::Serialize;
+use anyhow::Result;
 
 #[derive(Serialize)]
 struct LoginAnkiSyncHeader {
@@ -8,7 +9,7 @@ struct LoginAnkiSyncHeader {
     s: String
 }
 
-pub fn build_anki_sync() -> String {
+pub fn build_anki_sync() -> Result<String> {
     let client_version = format!(
             "{app},{version}",
             app = "anki-dl",
@@ -21,5 +22,5 @@ pub fn build_anki_sync() -> String {
         k: String::from(""),
         s: String::from("test_session")
     };
-    serde_json::to_string(&login_header).unwrap()
+    Ok(serde_json::to_string(&login_header)?)
 }

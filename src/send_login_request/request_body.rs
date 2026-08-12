@@ -21,8 +21,8 @@ impl LoginBody {
 
 pub fn build(credentials: UserCredentials) -> Result<Vec<u8>> {
     let body = LoginBody::from(credentials);
-    let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
-    serde_json::to_writer(&mut encoder, &body).unwrap();
+    let mut encoder = Encoder::new(Vec::new(), 0)?;
+    serde_json::to_writer(&mut encoder, &body)?;
     Ok(encoder.finish()?)
 }
 
