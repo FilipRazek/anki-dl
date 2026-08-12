@@ -1,6 +1,11 @@
 use serde::Serialize;
 use zstd::stream::write::Encoder;
 
+struct UserCredentials {
+    user: String,
+    password: String
+}
+
 #[derive(Serialize)]
 struct LoginBody {
     u: String,
@@ -8,9 +13,13 @@ struct LoginBody {
 }
 
 pub fn build(user: String, password: String) -> Vec<u8> {
+    let credentials = UserCredentials {
+        user: user,
+        password: password
+    };
     let body = LoginBody {
-        u: user,
-        p: password,
+        u: credentials.user,
+        p: credentials.password,
     };
     let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
     serde_json::to_writer(&mut encoder, &body).unwrap();
