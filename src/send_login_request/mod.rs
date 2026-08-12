@@ -13,7 +13,7 @@ mod entities;
 pub async fn send_login_request(user: String, password: String) -> Result<LoginResult, Error> {
     let result = send_http_request(user, password).await.unwrap().bytes();
     let bytes = result.await.unwrap();
-    request_result::decompress_result(&bytes[..])
+    LoginResult::decompress_result(&bytes[..])
 }
 
 fn send_http_request(user: String, password: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
