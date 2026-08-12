@@ -1,7 +1,7 @@
 use std::println;
 use std::env;
 use send_login_request::send_login_request;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 
 mod send_login_request;
 
