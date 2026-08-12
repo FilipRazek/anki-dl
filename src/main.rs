@@ -10,8 +10,13 @@ fn main() {
 }
 
 async fn login() {
-    let data = send_login_request(load_password()).await.expect("Error loggin in to AnkiWeb");
+    let data = send_login_request(load_username(), load_password()).await.expect("Error loggin in to AnkiWeb");
     println!("{}", data.key);
+}
+
+fn load_username() -> String {
+    dotenv().ok();
+    env::var("ANKI_USERNAME").expect("Anki username not found in .env")
 }
 
 fn load_password() -> String {

@@ -8,14 +8,14 @@ mod request_body;
 mod request_headers;
 
 
-pub async fn send_login_request(password: String) -> Result<LoginResult, Error> {
-    let result = send_http_request(password).await.unwrap().bytes();
+pub async fn send_login_request(user: String, password: String) -> Result<LoginResult, Error> {
+    let result = send_http_request(user, password).await.unwrap().bytes();
     let bytes = result.await.unwrap();
     request_result::decompress_result(&bytes[..])
 }
 
-fn send_http_request(password: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
-    let body = request_body::build(password);
+fn send_http_request(user: String, password: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
+    let body = request_body::build(user, password);
     let anki_sync_header = request_headers::build_anki_sync();
     let client = reqwest::Client::new();
     client.post("https://sync.ankiweb.net/sync/hostKey")
