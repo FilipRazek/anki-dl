@@ -1,5 +1,6 @@
 use serde::Serialize;
 use zstd::stream::write::Encoder;
+use anyhow::Result;
 
 use super::entities::UserCredentials;
 
@@ -18,11 +19,11 @@ impl LoginBody {
     }
 }
 
-pub fn build(credentials: UserCredentials) -> Vec<u8> {
+pub fn build(credentials: UserCredentials) -> Result<Vec<u8>> {
     let body = LoginBody::from(credentials);
     let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
     serde_json::to_writer(&mut encoder, &body).unwrap();
-    encoder.finish().unwrap()
+    Ok(encoder.finish()?)
 }
 
 #[cfg(test)]
