@@ -5,8 +5,9 @@ use dotenvy::dotenv;
 
 mod send_login_request;
 
-fn main() {
-    trpl::block_on(login());
+#[tokio::main]
+async fn main() {
+    login().await;
 }
 
 async fn login() {
