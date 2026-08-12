@@ -9,11 +9,17 @@ struct LoginBody {
     p: String
 }
 
+impl LoginBody {
+    fn from(credentials: UserCredentials) -> LoginBody {
+            LoginBody {
+            u: credentials.user,
+            p: credentials.password,
+        }
+    }
+}
+
 pub fn build(credentials: UserCredentials) -> Vec<u8> {
-    let body = LoginBody {
-        u: credentials.user,
-        p: credentials.password,
-    };
+    let body = LoginBody::from(credentials);
     let mut encoder = Encoder::new(Vec::new(), 0).unwrap();
     serde_json::to_writer(&mut encoder, &body).unwrap();
     encoder.finish().unwrap()
