@@ -1,8 +1,7 @@
-
-use std::io::Error;
 use reqwest::Response;
 pub use request_result::LoginResult;
 use entities::UserCredentials;
+use anyhow::Result;
 
 mod request_result;
 mod request_body;
@@ -10,9 +9,9 @@ mod request_headers;
 mod entities;
 
 
-pub async fn send_login_request(user: String, password: String) -> Result<LoginResult, Error> {
-    let result = send_http_request(user, password).await.unwrap().bytes();
-    let bytes = result.await.unwrap();
+pub async fn send_login_request(user: String, password: String) -> Result<LoginResult> {
+    let result = send_http_request(user, password).await?.bytes();
+    let bytes = result.await?;
     LoginResult::decompress_result(&bytes[..])
 }
 
