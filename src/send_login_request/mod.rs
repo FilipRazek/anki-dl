@@ -2,10 +2,12 @@
 use std::io::Error;
 use reqwest::Response;
 pub use request_result::LoginResult;
+use entities::UserCredentials;
 
 mod request_result;
 mod request_body;
 mod request_headers;
+mod entities;
 
 
 pub async fn send_login_request(user: String, password: String) -> Result<LoginResult, Error> {
@@ -15,7 +17,10 @@ pub async fn send_login_request(user: String, password: String) -> Result<LoginR
 }
 
 fn send_http_request(user: String, password: String) -> impl Future<Output = Result<Response, reqwest::Error>> {
-    let body = request_body::build(user, password);
+    let body = request_body::build(    UserCredentials {
+        user: user,
+        password: password
+    });
     let anki_sync_header = request_headers::build_anki_sync();
     let client = reqwest::Client::new();
     client.post("https://sync.ankiweb.net/sync/hostKey")
