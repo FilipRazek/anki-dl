@@ -3,7 +3,7 @@ use std::env;
 
 pub fn load_var(key: &str) -> String {
     dotenv().ok();
-    env::var(key).expect(&format!("{key} not found in .env"))
+    env::var(key).expect(&format!("{} not found in .env", key))
 }
 
 #[cfg(test)]
