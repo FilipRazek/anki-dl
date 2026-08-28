@@ -2,11 +2,36 @@ use dotenvy::dotenv;
 use std::env;
 
 pub fn load_username() -> String {
-    dotenv().ok();
-    env::var("ANKI_USERNAME").expect("Anki username not found in .env")
+    load_var("ANKI_USERNAME")
 }
 
 pub fn load_password() -> String {
+    load_var("ANKI_PASSWORD")
+}
+
+fn load_var(key: &str) -> String {
     dotenv().ok();
-    env::var("ANKI_PASSWORD").expect("Anki password not found in .env")
+    env::var(key).expect(&format!("{key} not found in .env"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn load_var_succeeds() {
+        unsafe {
+            env::set_var("TEST_VAR", "test_value");
+        }
+        assert_eq!(load_var("TEST_VAR"), "test_value");
+    }
+
+    #[test]
+    #[should_panic(expected = "MISSING_TEST_VAR not found in .env")]
+    fn load_var_panics_when_missing() {
+        unsafe {
+            env::remove_var("MISSING_TEST_VAR");
+        }
+        load_var("MISSING_TEST_VAR");
+    }
 }
