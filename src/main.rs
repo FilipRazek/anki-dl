@@ -13,7 +13,7 @@ async fn main() {
 async fn login() {
     let login_data = send_login_request(load_username(), load_password())
         .await
-        .expect("Error login in to AnkiWeb");
+        .expect("Error during login to AnkiWeb");
     println!("{}", login_data.key);
 }
 
