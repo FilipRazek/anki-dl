@@ -1,9 +1,9 @@
-use send_login_request::send_login_request;
 use send_login_request::UserCredentials;
+use send_login_request::send_login_request;
 use std::println;
 
-mod send_login_request;
 mod env_var;
+mod send_login_request;
 
 #[tokio::main]
 async fn main() {
@@ -15,8 +15,7 @@ async fn login() {
         user: env_var::load_var("ANKI_USERNAME"),
         password: env_var::load_var("ANKI_PASSWORD"),
     })
-        .await
-        .expect("Error during login to AnkiWeb");
+    .await
+    .expect("Error during login to AnkiWeb");
     println!("{}", login_data.key);
 }
-

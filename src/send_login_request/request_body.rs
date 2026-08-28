@@ -36,7 +36,8 @@ mod tests {
             build(UserCredentials {
                 user: String::from("filip@razek.org"),
                 password: String::from("password"),
-            }).unwrap(),
+            })
+            .unwrap(),
             [
                 40, 181, 47, 253, 0, 88, 49, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105,
                 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34,
@@ -47,7 +48,8 @@ mod tests {
             build(UserCredentials {
                 user: String::from("filip@razek.org"),
                 password: String::from("c0Mpl1c4t3D_Pa$$w0Rd"),
-            }).unwrap(),
+            })
+            .unwrap(),
             [
                 40, 181, 47, 253, 0, 88, 145, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105,
                 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34,
@@ -59,7 +61,8 @@ mod tests {
             build(UserCredentials {
                 user: String::from("filip@razek.org"),
                 password: String::from("letmein123"),
-            }).unwrap(),
+            })
+            .unwrap(),
             [
                 40, 181, 47, 253, 0, 88, 65, 1, 0, 123, 34, 117, 34, 58, 34, 102, 105, 108, 105,
                 112, 64, 114, 97, 122, 101, 107, 46, 111, 114, 103, 34, 44, 34, 112, 34, 58, 34,
