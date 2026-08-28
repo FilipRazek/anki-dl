@@ -1,5 +1,5 @@
 use anyhow::Result;
-use entities::UserCredentials;
+pub use entities::UserCredentials;
 pub use request_result::LoginResult;
 use reqwest::Response;
 
@@ -8,17 +8,14 @@ mod request_body;
 mod request_headers;
 mod request_result;
 
-pub async fn send_login_request(user: String, password: String) -> Result<LoginResult> {
-    let result = send_http_request(user, password).await?.bytes();
+pub async fn send_login_request(credentials: UserCredentials) -> Result<LoginResult> {
+    let result = send_http_request(credentials).await?.bytes();
     let bytes = result.await?;
     LoginResult::decompress_result(&bytes[..])
 }
 
-async fn send_http_request(user: String, password: String) -> Result<Response> {
-    let body = request_body::build(UserCredentials {
-        user: user,
-        password: password,
-    })?;
+async fn send_http_request(credentials: UserCredentials) -> Result<Response> {
+    let body = request_body::build(credentials)?;
     let anki_sync_header = request_headers::build_anki_sync()?;
     let client = reqwest::Client::new();
     Ok(client
