@@ -1,15 +1,7 @@
 use dotenvy::dotenv;
 use std::env;
 
-pub fn load_username() -> String {
-    load_var("ANKI_USERNAME")
-}
-
-pub fn load_password() -> String {
-    load_var("ANKI_PASSWORD")
-}
-
-fn load_var(key: &str) -> String {
+pub fn load_var(key: &str) -> String {
     dotenv().ok();
     env::var(key).expect(&format!("{key} not found in .env"))
 }
