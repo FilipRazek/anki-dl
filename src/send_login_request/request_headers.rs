@@ -12,7 +12,11 @@ struct LoginAnkiSyncHeader {
 }
 
 pub fn build_anki_sync() -> Result<String> {
-    let client_version = format!("{app},{version}", app = "anki-dl", version = "0.1.0");
+    let client_version = format!(
+        "{app},{version}",
+        app = env!("CARGO_PKG_NAME"),
+        version = env!("CARGO_PKG_VERSION")
+    );
 
     let login_header = LoginAnkiSyncHeader {
         v: SYNC_PROTOCOL_VERSION,
