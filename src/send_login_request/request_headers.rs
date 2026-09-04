@@ -17,8 +17,8 @@ pub fn build_anki_sync() -> Result<String> {
     let login_header = LoginAnkiSyncHeader {
         v: SYNC_PROTOCOL_VERSION,
         c: client_version,
-        k: String::from(""),
-        s: String::from("test_session"),
+        k: String::new(),
+        s: String::new(),
     };
     Ok(serde_json::to_string(&login_header)?)
 }
