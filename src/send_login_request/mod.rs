@@ -17,9 +17,10 @@ pub async fn send_login_request(credentials: UserCredentials) -> Result<LoginRes
 async fn send_http_request(credentials: UserCredentials) -> Result<Response> {
     let body = request_body::build(credentials)?;
     let anki_sync_header = request_headers::build_anki_sync()?;
+    let anki_sync_url = "https://sync.ankiweb.net/sync/hostKey";
     let client = reqwest::Client::new();
     Ok(client
-        .post("https://sync.ankiweb.net/sync/hostKey")
+        .post(anki_sync_url)
         .header("anki-sync", anki_sync_header)
         .header("Content-Type", "application/octet-stream")
         .body(body)
