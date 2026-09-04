@@ -9,8 +9,8 @@ mod request_headers;
 mod request_result;
 
 pub async fn send_login_request(credentials: UserCredentials) -> Result<LoginResult> {
-    let result = send_http_request(credentials).await?.bytes();
-    let bytes = result.await?;
+    let response = send_http_request(credentials).await?;
+    let bytes = response.bytes().await?;
     LoginResult::decompress_result(&bytes[..])
 }
 
