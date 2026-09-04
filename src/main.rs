@@ -1,6 +1,5 @@
 use send_login_request::UserCredentials;
 use send_login_request::send_login_request;
-use std::println;
 
 mod env_var;
 mod send_login_request;
